@@ -11,11 +11,11 @@
 # UPDATE mysql.user SET Password=PASSWORD('mysecret') WHERE User='root';
 # FLUSH PRIVILEGES;
 - name: Set root Password
-  mysql_user: login_user=root login_password='' name=root host={{ item }} password={{ mysql_root_password }} encrypted=yes state=present
+  mysql_user: login_user=root login_password='' name=root password={{ mysql_root_password }} host={{ item }} state=present
   with_items:
-    - localhost
     - 127.0.0.1
     - ::1
+    - localhost
 
 - name: Reload privilege tables
   command: 'mysql -ne "{{ item }}"'
