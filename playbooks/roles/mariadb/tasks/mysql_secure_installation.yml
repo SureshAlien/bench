@@ -3,17 +3,15 @@
 - debug:
     msg: "{{ mysql_root_password }}"
 
-# Set root password
-# UPDATE mysql.user SET Password=PASSWORD('mysecret') WHERE User='root';
-# FLUSH PRIVILEGES;
+- name: Get list of hosts for the root user
+  command: mysql -NBe "SELECT Host FROM mysql.user WHERE User='root' ORDER BY (Host='localhost') ASC"
+  register: mysql_root_hosts
+
 - name: Set root password
   shell: >
     mysql -NBe
     'SET PASSWORD FOR "root"@"{{ item }}" = PASSWORD("{{ mysql_root_password }}");'
-  with_items:
-    - 127.0.0.1
-    - ::1
-    - localhost
+  with_items: "{{ mysql_root_hosts.stdout_lines }}"
 
 # create root .my.cnf config file
 - name: Add .my.cnf
