@@ -1,4 +1,14 @@
 ---
+- name: Add repo file
+  template: src=mariadb_ubuntu.list.j2 dest=/etc/apt/sources.list.d/mariadb.list owner=root group=root mode=0644
+  register: mariadb_list
+
+- name: Add repo key
+  apt_key:
+    keyserver: "keyserver.ubuntu.com"
+    id: "0xF1656F24C74CD1D8"
+    state: "present"
+
 - name: Unattended package installation
   shell: export DEBIAN_FRONTEND=noninteractive
   changed_when: false
