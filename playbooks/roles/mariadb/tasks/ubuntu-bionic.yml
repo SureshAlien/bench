@@ -14,9 +14,9 @@
   apt: update_cache=yes
   when: mariadb_list.changed == True or mariadb_key.changed == True
 
-#- name: Unattended package installation
-#  shell: export DEBIAN_FRONTEND=noninteractive
-#  changed_when: false
+- name: Unattended package installation
+  shell: export DEBIAN_FRONTEND=noninteractive
+  changed_when: false
 
 - name: Install MariaDB
   apt: pkg={{ item }} state=present
