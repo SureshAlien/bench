@@ -8,6 +8,11 @@
     keyserver: "keyserver.ubuntu.com"
     id: "0xF1656F24C74CD1D8"
     state: "present"
+  register: mariadb_key
+
+- name: Update apt cache
+  apt: update_cache=yes
+  when: mariadb_list.changed == True or mariadb_key.changed == True
 
 - name: Unattended package installation
   shell: export DEBIAN_FRONTEND=noninteractive
