@@ -14,7 +14,7 @@ def install_bench(args):
 	success = run_os_command({
 		'apt-get': [
 			'sudo apt-get update',
-			'sudo apt-get install -y git build-essential python-setuptools python-dev libffi-dev libssl-dev'
+			'sudo apt-get install -y git software-properties-common build-essential python-setuptools python-dev libffi-dev libssl-dev'
 		],
 		'yum': [
 			'sudo yum groupinstall -y "Development tools"',
