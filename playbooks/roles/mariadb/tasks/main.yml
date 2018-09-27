@@ -11,36 +11,40 @@
 - include: ubuntu-bionic.yml
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == '18.04'
 
-- name: Add configuration
-  template: src={{ mysql_conf_tpl }} dest={{ mysql_conf_dir[ansible_distribution] }}/{{ mysql_conf_file }} owner=root group=root mode=0644
-  when: mysql_conf_tpl != 'change_me' and ansible_distribution != 'Debian'
-  notify: restart mysql
+#- name: Add configuration
+#  template: src={{ mysql_conf_tpl }} dest={{ mysql_conf_dir[ansible_distribution] }}/{{ mysql_conf_file }} owner=root group=root mode=0644
+#  when: mysql_conf_tpl != 'change_me' and ansible_distribution != 'Debian'
+#  notify: restart mysql
 
 - include_tasks: debian.yml
   when: ansible_distribution == 'Debian'
 
-- name: Add configuration
-  template: src={{ mysql_conf_tpl }} dest={{ mysql_conf_dir[ansible_distribution] }}/{{ mysql_conf_file }} owner=root group=root mode=0644
-  when: mysql_conf_tpl != 'change_me' and ansible_distribution == 'Debian'
-  notify: restart mysql
+#- name: Add configuration
+#  template: src={{ mysql_conf_tpl }} dest={{ mysql_conf_dir[ansible_distribution] }}/{{ mysql_conf_file }} owner=root group=root mode=0644
+#  when: mysql_conf_tpl != 'change_me' and ansible_distribution == 'Debian'
+#  notify: restart mysql
 
-- name: Add additional conf for MariaDB 10.1 in mariadb.conf.d
+#- name: Add additional conf for MariaDB 10.3 in mariadb.conf.d
+#  blockinfile:
+#    path: /etc/mysql/conf.d/settings.cnf
+#    block: |
+#      # Import all .cnf files from configuration directory
+#      !includedir /etc/mysql/mariadb.conf.d/
+#  become: yes
+#  become_user: root
+#  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+#
+- name: Override conf for MariaDB 10.3 in mariadb.conf.d
   blockinfile:
-    path: /etc/mysql/conf.d/settings.cnf
-    block: |
-      # Import all .cnf files from configuration directory
-      !includedir /etc/mysql/mariadb.conf.d/
-  become: yes
-  become_user: root
-  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
-
-- name: Add additional conf for MariaDB 10.1 in mariadb.conf.d
-  blockinfile:
-    path: /etc/mysql/mariadb.conf.d/erpnext.cnf
+    path: /etc/mysql/mariadb.conf.d/frappe.cnf
     block: |
       [mysqld]
-      pid-file        = /var/run/mysqld/mysqld.pid
-      socket          = /var/run/mysqld/mysqld.sock
+      character-set-client-handshake = FALSE
+      character-set-server = utf8mb4
+      collation-server = utf8mb4_unicode_ci
+
+      [mysql]
+      default-character-set = utf8mb4
     create: yes
   become: yes
   become_user: root
