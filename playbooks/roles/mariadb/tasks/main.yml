@@ -49,6 +49,7 @@
   become: yes
   become_user: root
   when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+  notify: restart mysql
 
 - name: Start and enable service
   service: name=mysql state=started enabled=yes
